@@ -27,6 +27,7 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - name: SSH Remote Commands
+      uses: appleboy/ssh-action@v0.1.2
       with:
         script: |
           pm2 delete all
