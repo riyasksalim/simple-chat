@@ -8,7 +8,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 var handler = require('./handler');
-var port = 1337;
+var port = process.env.PORT || 5000;
 
 // Sets up express static server directory to the /public folder
 app.use(express.static(__dirname + '/public'));
@@ -93,7 +93,7 @@ io.sockets.on('connection', function(socket) {
 });
 
 
-server.listen(port,'0.0.0.0', function() { console.log("Server listening at http://localhost:"+port)});
+server.listen(port,function() { console.log("Server listening at http://localhost:"+port)});
 
 // ExpressJS routes using the 'get' verb
 app.get('/', handler);
