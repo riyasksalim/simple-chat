@@ -37,6 +37,8 @@
   -o-animation: entry linear 0.25s;
   -ms-animation: entry linear 0.25s;
   animation: entry linear 0.25s;
+  white-space: pre-wrap;
+  background-color: lightgray !important;
 }
 #chatBox p.self {
   -webkit-animation: entry-right linear 0.25s;
@@ -44,7 +46,9 @@
   -o-animation: entry-right linear 0.25s;
   -ms-animation: entry-right linear 0.25s;
   animation: entry-right linear 0.25s;
-  text-align: right;
+  /* text-align: right; */
+  white-space: pre-wrap;
+  background-color: beige !important;
 }
 
 #usersBox .modal-body {
