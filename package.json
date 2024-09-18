@@ -2,9 +2,12 @@
   "name": "chat-app",
   "version": "1.0.0",
   "scripts": {
-    "install": "cd frontend && npm install && cd ../backend && npm install",
-    "start": "npm run build --prefix frontend && npm run start --prefix backend"
+    "start": "node server.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.18.2",
+    "sanitize-html": "^2.7.0",
+    "socket.io": "^4.5.4"
+  },
   "devDependencies": {}
 }

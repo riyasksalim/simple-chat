@@ -10,18 +10,18 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, './build')));
 
 // Handle Socket.io connections
 socketHandler(io);
 
 // Catch-all handler for any requests not handled above
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+  res.sendFile(path.join(__dirname, './build/index.html'));
 });
 
 // Start the server
-const PORT = 5000;
+const PORT = 8080;
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
