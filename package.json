@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "install": "cd frontend && npm install && cd ../backend && npm install",
-    "start": "npm run build --prefix frontend && npm run start --prefix backend",
-    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run start --prefix frontend\""
+    "start": "npm run build --prefix frontend && npm run start --prefix backend"
   },
   "dependencies": {},
-  "devDependencies": {
-    "concurrently": "^7.3.0"
-  }
+  "devDependencies": {}
 }
