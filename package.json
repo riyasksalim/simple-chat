@@ -1,11 +1,13 @@
 {
-    "name": "chat-app",
-    "version": "0.0.1",
-    "scripts": {
-        "start": "node index.js"
-    },
-    "dependencies": {
-        "express": "~3.4.8",
-        "socket.io": "~0.9.16"
-    }
+  "name": "chat-app",
+  "version": "1.0.0",
+  "scripts": {
+    "install": "cd frontend && npm install && cd ../backend && npm install",
+    "start": "npm run build --prefix frontend && npm run start --prefix backend",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run start --prefix frontend\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^7.3.0"
+  }
 }
