@@ -1,55 +1,59 @@
-const { exec } = require('child_process');
-const fs = require('fs');
+// download-and-extract.js
+
+const axios = require('axios');
+const fs = require('fs-extra');
+const unzipper = require('unzipper');
 const path = require('path');
-
-// Paths
-const frontendDir = path.join(__dirname, 'frontend');
-const buildDir = path.join(frontendDir, 'build');
-const rootDir = __dirname;
-const nodeModulesDir = path.join(frontendDir, 'node_modules');
-
-// Helper function to execute shell commands
-function runCommand(command, options = {}) {
-  return new Promise((resolve, reject) => {
-    exec(command, { ...options, maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing command "${command}":\n`, stderr);
-        reject(error);
-      } else {
-        console.log(`Command "${command}" executed successfully.`);
-        resolve(stdout);
-      }
-    });
-  });
-}
 
 (async () => {
   try {
-    // Step 1: Navigate to the 'frontend' folder
-    process.chdir(frontendDir);
-    console.log(`Changed directory to ${frontendDir}`);
+    const url = 'https://github.com/riyasksalim/simple-chat-front-end/raw/main/build.zip';
+    const zipFilePath = path.join(__dirname, 'build.zip');
+    const buildFolderPath = path.join(__dirname, 'build');
 
-    // Step 2: Run 'npm install'
-    console.log('Running npm install...');
-    await runCommand('npm install');
+    // Step 1: Download the build.zip file
+    console.log('Downloading build.zip...');
+    const response = await axios({
+      method: 'GET',
+      url: url,
+      responseType: 'stream',
+    });
 
-    // Step 3: Run 'npm run build'
-    console.log('Running npm run build...');
-    await runCommand('npm run build');
+    // Pipe the response data to a file
+    const writer = fs.createWriteStream(zipFilePath);
 
-    // Step 4: Delete 'node_modules' folder
-    console.log('Deleting node_modules folder...');
-    fs.rmSync(nodeModulesDir, { recursive: true, force: true });
-    console.log('node_modules folder deleted.');
+    response.data.pipe(writer);
 
-    // Step 5: Move 'build' folder to root directory
-    console.log('Moving build folder to root directory...');
-    const targetBuildDir = path.join(rootDir, 'build');
-    fs.renameSync(buildDir, targetBuildDir);
-    console.log('build folder moved to root directory.');
+    await new Promise((resolve, reject) => {
+      writer.on('finish', resolve);
+      writer.on('error', reject);
+    });
 
-    console.log('All operations completed successfully.');
+    console.log('Download complete.');
+
+    // Step 2: Delete existing build folder if it exists
+    if (await fs.pathExists(buildFolderPath)) {
+      console.log('Deleting existing build folder...');
+      await fs.remove(buildFolderPath);
+      console.log('Existing build folder deleted.');
+    }
+
+    // Step 3: Extract the zip file
+    console.log('Extracting build.zip...');
+    await fs.createReadStream(zipFilePath)
+      .pipe(unzipper.Extract({ path: __dirname }))
+      .promise();
+
+    console.log('Extraction complete.');
+
+    // Step 4: Delete the build.zip file
+    console.log('Deleting build.zip file...');
+    await fs.unlink(zipFilePath);
+    console.log('build.zip file deleted.');
+
+    console.log('All done.');
+
   } catch (error) {
-    console.error('An error occurred:', error);
+    console.error('An error occurred:', error.message);
   }
 })();
